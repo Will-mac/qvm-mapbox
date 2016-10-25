@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>ImageOverlay with georeferenced scanned map</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />
+<style>
+	body { margin:0; padding:0; }
+	#map { position:absolute; top:0; bottom:0; width:100%; height:100%; }
+	/*
+	* These CSS rules affect the tooltips within maps with the custom-popup
+	* class. See the full CSS for all customizable options:
+	* https://github.com/mapbox/mapbox.js/blob/001754177f3985c0e6b4a26e3c869b0c66162c99/theme/style.css#L321-L366
+	*/
+	.custom-popup .leaflet-popup-content-wrapper {
+		//background:#2c3e50;
+		//font-family: 'Gotham SSm A', 'Gotham SSm B';
+		font: Gotham, Arial, sans-serif;
+		//color:#fff;
+		font-size:16px;
+		line-height:24px;
+	}
+	.custom-popup .leaflet-popup-content-wrapper a {
+		//color:rgba(255,255,255,0.5);
+	}
+	.custom-popup .leaflet-popup-tip-container {
+		width:30px;
+		height:15px;
+	}
+	.custom-popup .leaflet-popup-tip {
+		border-left:15px solid transparent;
+		border-right:15px solid transparent;
+		border-top:15px solid #2c3e50;
+	}
+</style>
+</head>
+<body>
+
+<div class='custom-popup' id='map'></div>
+<script>
+L.mapbox.accessToken = 'pk.eyJ1IjoiY29tZWxib3VybmUiLCJhIjoiY2lxbHFzYmt2MDAzMWZ5bm53Y2d0NjRoMyJ9.xXFwyo0bSVHG1-W33fV0xQ';
+var imageUrl = 'images/QVM Map_Large.jpg',// 'https://urban.melbourne/sites/urban.melbourne/files/pictures/article-images/existing_diagram-01.png',//'https://farm4.staticflickr.com/3731/14101168818_932d707f90_o.jpg',
+    // This is the trickiest part - you'll need accurate coordinates for the
+    // corners of the image. You can find and create appropriate values at
+    // http://maps.nypl.org/warper/ or
+    // http://www.georeferencer.org/
+    imageBounds = L.latLngBounds([
+        [-37.806161, 144.954032],
+        [-37.811986, 144.9619963]]); // + = taller, - = skinnier
+
+var map = L.mapbox.map('map', 'comelbourne.ciqlqzroo000dbgm1r5oppoyr', {
+    // set that bounding box as maxBounds to restrict moving the map
+    // see full maxBounds documentation:
+    // http://leafletjs.com/reference.html#map-maxbounds
+    maxBounds: imageBounds,
+	zoomControl: false,
+    maxZoom: 19,
+    minZoom: 10
+});
+
+var qIcon = L.Icon.extend({
+    options: {
+        //shadowUrl: 'images/q1.ow.png',
+        iconSize:     [30, 70],
+        //shadowSize:   [50, 64],
+        iconAnchor:   [15, 35],
+        //shadowAnchor: [4, 62],
+        popupAnchor:  [0, -45]
+    }
+});
+// resize for mobiles
+window.onresize = function()
+{
+  setTimeout( function() { map.updateSize();}, 200);
+  //alert('resized!');
+}
+var q1Icon = new qIcon({iconUrl: 'images/q1.png'});
+var q2Icon = new qIcon({iconUrl: 'images/q2.png'});
+var q3Icon = new qIcon({iconUrl: 'images/q3.png'});
+var q4Icon = new qIcon({iconUrl: 'images/q4.png'});
+var q5Icon = new qIcon({iconUrl: 'images/MC.png'});
+
+map.fitBounds(imageBounds);
+// See full documentation for the ImageOverlay type:
+// http://leafletjs.com/reference.html#imageoverlay
+var overlay = L.imageOverlay(imageUrl, imageBounds)
+    .addTo(map);
+
+// Adding sensors
+// Create sensor
+var marker_sensor = L.marker([-37.807550, 144.959040], {
+    icon: q1Icon
+});
+// Add popup to sensor
+marker_sensor.bindPopup("<b>Quarter One</b><br> Victoria&rsquo;s freshest meat, fish and dairy will be showcased in the market&rsquo;s iconic produce halls.<a href='http://www.qvm.com.au/'><br><br>Find out more about Quarter One.</a>").openPopup();
+// Add Marker to map
+marker_sensor.addTo(map);
+
+// Create sensor
+var marker_sensor = L.marker([-37.807525, 144.956300], {
+    icon: q2Icon
+});
+// Add popup to sensor
+marker_sensor.bindPopup("<b>Quarter Two</b><br>The historic open air sheds, A&ndash;D, will be restored. A below-ground operational area will be built for traders.<a href='http://www.qvm.com.au/'><br><br>  Find out more about Quarter Two.</a>").openPopup();
+// Add Marker to map
+marker_sensor.addTo(map);
+
+
+
+// Create sensor
+var marker_sensor = L.marker([-37.809815, 144.956300], {
+    icon: q3Icon
+});
+// Add popup to sensor
+marker_sensor.bindPopup("<b>Quarter Three</b><br>The historic open air sheds, A&ndash;D, will be restored. A below-ground operational area will be built for traders.<a href='http://www.qvm.com.au/'> <br> <br> Find out more about Quarter Three.</a>").openPopup();
+// Add Marker to map
+marker_sensor.addTo(map);
+
+
+
+// Create sensor
+var marker_sensor = L.marker([-37.808799, 144.958831], {
+    icon: q4Icon
+});
+// Add popup to sensor
+marker_sensor.bindPopup("<b>Quarter Four</b><br>New mixed&ndash;use development, on the former Munro site, will accommodate new customer car parking for the market.<a href='http://www.qvm.com.au/'> <br>  <br>    Find out more about Quarter Four.</a>").openPopup();
+// Add Marker to map
+marker_sensor.addTo(map);
+
+
+
+// Create sensor
+var marker_sensor = L.marker([ -37.807109, 144.957890], {      
+    icon: q5Icon
+});
+// Add popup to sensor
+marker_sensor.bindPopup("<b>Market cross</b><br>By investing in below-ground facilities, the market&rsquo;s main public areas can now be devoted to people<a href='http://www.qvm.com.au/'> <br>  <br>    Find out more about Market Cross.</a>").openPopup();
+// Add Marker to map
+marker_sensor.addTo(map);
+
+
+
+
+
+// disable map interaction
+//map.dragging.disable();
+//map.touchZoom.disable();
+//map.doubleClickZoom.disable();
+//map.scrollWheelZoom.disable();
+
+
+
+
+
+L.mapbox.featureLayer({
+    // this feature is in the GeoJSON format: see geojson.org
+    // for the full specification
+    type: 'Feature',
+    geometry: {
+        type: 'Point',
+        // coordinates here are in longitude, latitude order because
+        // x, y is the standard for GeoJSON and many formats
+        coordinates: [
+          144.959600,
+          -37.809800
+        ]
+    },
+    properties: {
+        title: 'City Grid',
+        description: 'Our transformed market will be surrounded by great city streets with more room for pedestrians, cyclists and improved access to public transport. ',
+        // one can customize markers by adding simplestyle properties
+        // https://www.mapbox.com/guides/an-open-platform/#simplestyle
+        'marker-symbol': 'cross',
+        'marker-size': 'medium',
+        'marker-color': '#000000'
+    }
+}).addTo(map);
+
+
+
+
+</script>
+
+
+</body>
+</html>
